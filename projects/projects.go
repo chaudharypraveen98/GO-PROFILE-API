@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type singleProject struct {
+type SingleProject struct {
 	gorm.Model
 	Id                  int32    `json:"id"`
 	Title               string   `json:"title"`
@@ -17,7 +17,7 @@ type singleProject struct {
 	Link                string   `json:"link"`
 }
 type Projects struct {
-	Projects []singleProject `json:"projects"`
+	Projects []SingleProject `json:"projects"`
 }
 
 func GetProjects(c *fiber.Ctx) error {
@@ -32,7 +32,7 @@ func GetProjects(c *fiber.Ctx) error {
 func GetSingleProject(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
-	var singleProject Projects
-	db.Find(&singleProject, id)
-	return c.JSON(singleProject)
+	var SingleProject Projects
+	db.Find(&SingleProject, id)
+	return c.JSON(SingleProject)
 }
