@@ -15,10 +15,12 @@ type SingleProject struct {
 	ID                  int32          `json:"id"`
 	Title               string         `json:"title"`
 	Desciption          string         `json:"desc"`
-	LastUpdated         string         `json:"last_updated"`
-	ProgrammingLanguage string         `json:"programming_language"`
-	Link                string         `json:"link"`
 	Topic               []ProjectTopic `gorm:"foreignKey:ProjectTopic" json:"topics"`
+	ProgrammingLanguage string         `json:"programming_language"`
+	Stars               int32          `json:"stars"`
+	Forks               int32          `json:"forks"`
+	LastUpdated         string         `json:"last_updated"`
+	Link                string         `json:"link"`
 }
 
 type ProjectTopic struct {
