@@ -6,17 +6,24 @@ import (
 	"gorm.io/gorm"
 )
 
-type SingleProject struct {
-	gorm.Model
-	ID                  int32  `json:"id"`
-	Title               string `json:"title"`
-	Desciption          string `json:"desc"`
-	LastUpdated         string `json:"last_updated"`
-	ProgrammingLanguage string `json:"programming_language"`
-	Link                string `json:"link"`
-}
 type Projects struct {
 	Projects []SingleProject `json:"projects"`
+}
+
+type SingleProject struct {
+	gorm.Model
+	ID                  int32          `json:"id"`
+	Title               string         `json:"title"`
+	Desciption          string         `json:"desc"`
+	LastUpdated         string         `json:"last_updated"`
+	ProgrammingLanguage string         `json:"programming_language"`
+	Link                string         `json:"link"`
+	Topic               []ProjectTopic `gorm:"foreignKey:ProjectTopic" json:"topics"`
+}
+
+type ProjectTopic struct {
+	gorm.Model
+	Name string
 }
 
 func GetProjects(c *fiber.Ctx) error {
