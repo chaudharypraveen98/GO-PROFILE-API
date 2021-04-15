@@ -8,13 +8,12 @@ import (
 
 type SingleProject struct {
 	gorm.Model
-	Id                  int32    `json:"id"`
-	Title               string   `json:"title"`
-	Desciption          string   `json:"desc"`
-	LastUpdated         string   `json:"last_updated"`
-	Topics              []string `json:"topics"`
-	ProgrammingLanguage string   `json:"programming_language"`
-	Link                string   `json:"link"`
+	ID                  int32  `json:"id"`
+	Title               string `json:"title"`
+	Desciption          string `json:"desc"`
+	LastUpdated         string `json:"last_updated"`
+	ProgrammingLanguage string `json:"programming_language"`
+	Link                string `json:"link"`
 }
 type Projects struct {
 	Projects []SingleProject `json:"projects"`
