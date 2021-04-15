@@ -25,7 +25,7 @@ type SingleProject struct {
 
 type ProjectTopic struct {
 	gorm.Model
-	Name string
+	NameID string
 }
 
 func GetProjects(c *fiber.Ctx) error {
