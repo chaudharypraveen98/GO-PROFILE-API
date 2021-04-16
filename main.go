@@ -23,17 +23,16 @@ func loadData() {
 	}
 	fmt.Println("Successfully Opened Projects.json")
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var allProjects projects.Projects
+	var allProjects projects.SingleProject
 	json.Unmarshal(byteValue, &allProjects)
 	// db.Migrator().DropTable(&projects.Projects{})
-	// db.Migrator().DropTable(&projects.SingleProject{})
-	// db.Migrator().DropTable(&projects.ProjectTopic{})
-	db.Migrator().CreateTable(&projects.Projects{})
+	db.Migrator().DropTable(&projects.SingleProject{})
+	db.Migrator().DropTable(&projects.ProjectTopic{})
 	db.Migrator().CreateTable(&projects.SingleProject{})
 	db.Migrator().CreateTable(&projects.ProjectTopic{})
-	fmt.Println(len(allProjects.Projects))
+	fmt.Println(allProjects)
 	// fmt.Println(db.Migrator().HasTable(&projects.Projects{}))
-	db.Create(&allProjects.Projects)
+	// db.Create(&allProjects.Projects)
 	// for i := 0; i < len(allProjects.Projects); i++ {
 	// 	var SingleProject projects.SingleProject
 	// 	SingleProject.ID = allProjects.Projects[i].ID
@@ -67,7 +66,7 @@ func main() {
 	app := fiber.New()
 	initDatabase()
 	loadData()
-	database.DBConn.AutoMigrate(&projects.Projects{}, &projects.SingleProject{}, &projects.ProjectTopic{})
+	database.DBConn.AutoMigrate(&projects.SingleProject{}, &projects.ProjectTopic{})
 	fmt.Println("Database migrated successfully")
 	setRoutes(app)
 	app.Listen(":3000")
