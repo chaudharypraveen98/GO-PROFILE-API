@@ -8,7 +8,7 @@ import (
 
 type Projects struct {
 	gorm.Model
-	Projects []SingleProject `json:"projects" gorm:"foreignKey:ID",constraint:OnUpdate:CASCADE,OnDelete:SET NULL`
+	Projects []SingleProject `json:"projects" gorm:"foreignKey:ID,constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 type SingleProject struct {
