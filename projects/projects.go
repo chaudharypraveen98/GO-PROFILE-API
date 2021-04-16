@@ -8,26 +8,19 @@ import (
 
 type Projects struct {
 	gorm.Model
-	Projects []SingleProject `json:"projects" gorm:"foreignKey:ID,constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	Projects []SingleProject `json:"projects"`
 }
 
 type SingleProject struct {
 	gorm.Model
-	ID                  int32          `json:"id"`
-	Title               string         `json:"title"`
-	Desciption          string         `json:"desc"`
-	Topic               []ProjectTopic `gorm:"many2many:singleProject_projectTopic" json:"topics"`
-	ProgrammingLanguage string         `json:"programming_language"`
-	Stars               int32          `json:"stars"`
-	Forks               int32          `json:"forks"`
-	LastUpdated         string         `json:"last_updated"`
-	Link                string         `json:"link"`
-}
-
-type ProjectTopic struct {
-	gorm.Model
-	NameID        string
-	SingleProject []SingleProject `gorm:"many2many:user_languages;"`
+	ID                  int32  `json:"id"`
+	Title               string `json:"title"`
+	Desciption          string `json:"desc"`
+	ProgrammingLanguage string `json:"programming_language"`
+	Stars               int32  `json:"stars"`
+	Forks               int32  `json:"forks"`
+	LastUpdated         string `json:"last_updated"`
+	Link                string `json:"link"`
 }
 
 func GetProjects(c *fiber.Ctx) error {
