@@ -6,12 +6,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type Projects struct {
+	gorm.Model
+	Projects []SingleProject `json:"projects" gorm:"foreignKey:ID",constraint:OnUpdate:CASCADE,OnDelete:SET NULL`
+}
+
 type SingleProject struct {
 	gorm.Model
 	ID                  int32          `json:"id"`
 	Title               string         `json:"title"`
 	Desciption          string         `json:"desc"`
-	Topic               []ProjectTopic `gorm:"many2many:singleProject_projectTopic;" json:"topics"`
+	Topic               []ProjectTopic `gorm:"many2many:singleProject_projectTopic" json:"topics"`
 	ProgrammingLanguage string         `json:"programming_language"`
 	Stars               int32          `json:"stars"`
 	Forks               int32          `json:"forks"`
@@ -22,12 +27,12 @@ type SingleProject struct {
 type ProjectTopic struct {
 	gorm.Model
 	NameID        string
-	SingleProject []SingleProject `gorm:"many2many:singleProject_projectTopic;"`
+	SingleProject []SingleProject `gorm:"many2many:user_languages;"`
 }
 
 func GetProjects(c *fiber.Ctx) error {
 	db := database.DBConn
-	var projects []SingleProject
+	var projects []Projects
 	db.Find(&projects)
 	return c.JSON(projects)
 }
@@ -37,7 +42,7 @@ func GetProjects(c *fiber.Ctx) error {
 func GetSingleProject(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
-	var SingleProject SingleProject
+	var SingleProject Projects
 	db.Find(&SingleProject, id)
 	return c.JSON(SingleProject)
 }
