@@ -8,7 +8,7 @@ import (
 
 type Projects struct {
 	gorm.Model
-	Projects []SingleProject `json:"projects"`
+	Projects []SingleProject `json:"projects" gorm:"foreignKey:ID"`
 }
 
 type SingleProject struct {
