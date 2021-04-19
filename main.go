@@ -14,41 +14,51 @@ import (
 )
 
 func loadData() {
+	// initiate the database connection
 	db := database.DBConn
+
 	// Open our jsonFile
 	jsonFile, err := os.Open("data/projects.json")
-	// if we os.Open returns an error then handle it
+
+	// if we os.Open returns an error then handle while opening
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	fmt.Println("Successfully Opened Projects.json")
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var allProjects projects.SingleProject
-	json.Unmarshal(byteValue, &allProjects)
-	// db.Migrator().DropTable(&projects.Projects{})
+	var SerialProjectData projects.SerialProject
+	json.Unmarshal(byteValue, &SerialProjectData)
+
+	// delete tables if they exit already
+	db.Migrator().DropTable(&projects.Projects{})
 	db.Migrator().DropTable(&projects.SingleProject{})
-	db.Migrator().DropTable(&projects.ProjectTopic{})
+
+	// create table using struct
+	db.Migrator().CreateTable(&projects.Projects{})
 	db.Migrator().CreateTable(&projects.SingleProject{})
-	db.Migrator().CreateTable(&projects.ProjectTopic{})
-	fmt.Println(allProjects)
-	// fmt.Println(db.Migrator().HasTable(&projects.Projects{}))
-	// db.Create(&allProjects.Projects)
-	// for i := 0; i < len(allProjects.Projects); i++ {
-	// 	var SingleProject projects.SingleProject
-	// 	SingleProject.ID = allProjects.Projects[i].ID
-	// 	SingleProject.Title = allProjects.Projects[i].Title
-	// 	SingleProject.Desciption = allProjects.Projects[i].Desciption
-	// 	SingleProject.LastUpdated = allProjects.Projects[i].LastUpdated
-	// 	SingleProject.ProgrammingLanguage = allProjects.Projects[i].ProgrammingLanguage
-	// 	SingleProject.Link = allProjects.Projects[i].Link
-	// 	fmt.Println(SingleProject.ProgrammingLanguage)
-	// 	db.Create(&SingleProject)
-	// }
-	for _, project := range allProjects.Projects {
-		db.Create(&project)
+
+	var allProjects projects.Projects
+	json.Unmarshal(byteValue, &allProjects)
+
+	// creating collections of all projects
+	db.Create(&allProjects)
+
+	// creating single project
+	for _, project := range SerialProjectData.Projects {
+		var singleProject projects.SingleProject
+		singleProject.ID = project.ID
+		singleProject.Title = project.Title
+		singleProject.Desciption = project.Desciption
+		singleProject.Forks = project.Forks
+		singleProject.LastUpdated = project.LastUpdated
+		singleProject.Link = project.Link
+		singleProject.ProgrammingLanguage = project.ProgrammingLanguage
+		db.Create(&singleProject)
 	}
 	defer jsonFile.Close()
 }
+
+// This func handles database connection
 func initDatabase() {
 	var err error
 	database.DBConn, err = gorm.Open(sqlite.Open("projects.db"), &gorm.Config{})
@@ -57,17 +67,23 @@ func initDatabase() {
 	}
 	fmt.Println("Database successfully opened")
 }
+
+// router to handles url endpoints
 func setRoutes(app *fiber.App) {
 	app.Get("/api/v1/projects", projects.GetProjects)
 	app.Get("/api/v1/projects/:id", projects.GetSingleProject)
+	app.Post("/api/v1/projects/:id/update", projects.UpdateSingleProject)
+	app.Post("/api/v1/projects/create", projects.CreateSingleProject)
+	app.Post("/api/v1/projects/:id/delete", projects.DeleteProject)
 }
 
 func main() {
 	app := fiber.New()
 	initDatabase()
 	loadData()
-	database.DBConn.AutoMigrate(&projects.SingleProject{}, &projects.ProjectTopic{})
+	database.DBConn.AutoMigrate(&projects.SingleProject{}, &projects.Projects{})
 	fmt.Println("Database migrated successfully")
+	fmt.Println("---------------------------")
 	setRoutes(app)
 	app.Listen(":3000")
 }
