@@ -22,7 +22,7 @@ type SerialProject struct {
 
 type SingleProject struct {
 	gorm.Model
-	ID                  int32  `gorm:"primaryKey;autoIncrement:True;" json:"id"`
+	ID                  int32  `gorm:"primaryKey" json:"id"`
 	Title               string `json:"title"`
 	Desciption          string `json:"desc"`
 	ProgrammingLanguage string `json:"programming_language"`
