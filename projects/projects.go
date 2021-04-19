@@ -17,12 +17,12 @@ type Projects struct {
 
 // all projects serializer
 type SerialProject struct {
-	Projects []SingleProject `json:"projects" gorm:"foreignKey:ProjectID"`
+	Projects []SingleProject `json:"projects" gorm:"foreignKey:ID"`
 }
 
 type SingleProject struct {
 	gorm.Model
-	ProjectID           int32  `gorm:"primaryKey" json:"id"`
+	ID                  int32  `gorm:"primaryKey;autoIncrement:True;" json:"id"`
 	Title               string `json:"title"`
 	Desciption          string `json:"desc"`
 	ProgrammingLanguage string `json:"programming_language"`
