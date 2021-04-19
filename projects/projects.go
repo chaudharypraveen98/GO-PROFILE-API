@@ -17,7 +17,7 @@ type Projects struct {
 
 // all projects serializer
 type SerialProject struct {
-	Projects []SingleProject `json:"projects" gorm:"foreignKey:ID"`
+	Projects []SingleProject `json:"projects" gorm:"foreignKey:ProjectID"`
 }
 
 type SingleProject struct {
